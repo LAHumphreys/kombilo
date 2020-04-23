@@ -100,7 +100,7 @@ Move& Move::operator=(const Move& m) {
   return *this;
 }
 
-abstractBoard::abstractBoard(int bs) throw(BoardError) {
+abstractBoard::abstractBoard(int bs) {
   boardsize = bs;
   if (boardsize < 1) throw BoardError();
   status = new char[boardsize*boardsize+1];
@@ -159,7 +159,7 @@ void abstractBoard::setStatus(int x, int y, char val) {
   else status[boardsize*x + y] = val;
 }
 
-int abstractBoard::len_cap_last() throw(BoardError) {
+int abstractBoard::len_cap_last() {
   return undostack_top_captures().size();
 }
 
@@ -208,7 +208,7 @@ void abstractBoard::clear() {
   undostack = vector<Move>();
 }
 
-int abstractBoard::play(int x, int y, const char* color) throw (BoardError) {
+int abstractBoard::play(int x, int y, const char* color) {
   // cout << "ab::play" << x << " " << y << endl;
   if (x<0 || x>=boardsize || y<0 || y>=boardsize) return 0;
   if (status[boardsize*x+y] != ' ') {

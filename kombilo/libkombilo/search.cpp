@@ -298,7 +298,7 @@ int dbinfo_callback(void *s, int argc, char **argv, char **asColName) {
   return 0;
 }
 
-void GameList::open_db() throw(DBError) {
+void GameList::open_db() {
   int rc = sqlite3_open(dbname, &db); 
   if (rc) {
     sqlite3_close(db);
@@ -315,7 +315,7 @@ void GameList::open_db() throw(DBError) {
   if (rc) throw DBError();
 }
 
-GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOptions* p_options, int BOARDSIZE, int cache) throw(DBError) {
+GameList::GameList(const char* DBNAME, string ORDERBY, string FORMAT, ProcessOptions* p_options, int BOARDSIZE, int cache) {
   boardsize = BOARDSIZE;
   labels = 0;
   mrs_pattern = 0;
@@ -513,7 +513,7 @@ void GameList::addAlgos(bool NEW) {
   //   algo_ps[algo_hash_side] = new Algo_hash_side(boardsize, 6, 4, p_op->algo_hash_side_maxNumStones);
 }
 
-void GameList::readDB() throw(DBError) {
+void GameList::readDB() {
   // printf("read dbs\n");
   if (oldList) delete oldList;
   if (currentList) delete currentList;
@@ -738,7 +738,7 @@ void GameList::reset() {
   for(int i = 0; i < (DATE_PROFILE_END - DATE_PROFILE_START)*12; i++) dates_current.push_back(dates_all[i]);
 }
 
-void GameList::tagsearch(int tag) throw(DBError) {
+void GameList::tagsearch(int tag) {
   char sql[200];
 
   if (!tag) return;
@@ -841,14 +841,14 @@ void GameList::import_tags(string tag_db_name) {
 
 
 
-void GameList::tagsearchSQL(char* query) throw(DBError) {
+void GameList::tagsearchSQL(char* query) {
   char sql[1000];
 
   sprintf(sql, "select GAMES.id from GAMES where %s order by GAMES.id", query);
   gisearch(sql, 1);
 }
 
-void GameList::setTagID(int tag, int i) throw(DBError) {
+void GameList::setTagID(int tag, int i) {
   int rc = sqlite3_exec(db, "begin transaction", 0, 0, 0);
   if (rc != SQLITE_OK) {
     throw DBError();
@@ -868,7 +868,7 @@ void GameList::setTagID(int tag, int i) throw(DBError) {
   }
 }
 
-void GameList::setTag(int tag, int start, int end) throw(DBError) {
+void GameList::setTag(int tag, int start, int end) {
   if (end==0) end = start+1;
   if (start>end || end > (int)currentList->size()) return;
   int rc = sqlite3_exec(db, "begin transaction", 0, 0, 0);
@@ -885,7 +885,7 @@ void GameList::setTag(int tag, int start, int end) throw(DBError) {
   if (rc != SQLITE_OK) throw DBError();
 }
 
-void GameList::deleteTag(int tag, int i) throw(DBError) {
+void GameList::deleteTag(int tag, int i) {
   char sql[200];
   if (i == -1) sprintf(sql, "delete from game_tags where tag_id=%d", tag);
   else sprintf(sql, "delete from game_tags where game_id=%d and tag_id=%d", (*all)[(*currentList)[i].second]->id, tag);
@@ -899,7 +899,7 @@ int gettags_callback(void *res, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-vector<int> GameList::getTagsID(int i, int tag) throw(DBError) {
+vector<int> GameList::getTagsID(int i, int tag) {
   vector<int> result;
   char sql[200];
   if (tag==0) sprintf(sql, "select tag_id from game_tags where game_id=%d order by tag_id", i);
@@ -909,7 +909,7 @@ vector<int> GameList::getTagsID(int i, int tag) throw(DBError) {
   return result;
 }
 
-vector<int> GameList::getTags(unsigned int i, int tag) throw(DBError) {
+vector<int> GameList::getTags(unsigned int i, int tag) {
   vector<int> result;
   if (i < 0 || i >= currentList->size()) return result;
   char sql[200];
@@ -939,7 +939,7 @@ int GameList::get_current_index(int id, int* start) {
 }
 
 
-void GameList::sigsearch(char* sig) throw(DBError) {
+void GameList::sigsearch(char* sig) {
   if (start_sorted() == 0) { 
     vector<int> result = sigsearchNC(sig);
     for(vector<int>::iterator it = result.begin(); it != result.end(); it++) {
@@ -952,7 +952,7 @@ void GameList::sigsearch(char* sig) throw(DBError) {
 
 
 
-vector<int> GameList::sigsearchNC(char* sig) throw(DBError) {
+vector<int> GameList::sigsearchNC(char* sig) {
   vector<int> result;
   int rc;
   sqlite3_stmt *ppStmt=0;
@@ -1008,7 +1008,7 @@ int gis_callback(void *gl, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-void GameList::gisearch(const char* sql, int complete) throw(DBError) {
+void GameList::gisearch(const char* sql, int complete) {
   if (start_sorted() == 0) { 
     string query;
     if (!complete) query = "select id from GAMES where ";
@@ -1031,7 +1031,7 @@ int gis_callbackNC(void *pair_gl_CL, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-vector<int>* GameList::gisearchNC(const char* sql, int complete) throw(DBError) {
+vector<int>* GameList::gisearchNC(const char* sql, int complete) {
   current = 0;
   if (oldList) delete oldList;
   oldList = new vector<pair<int,int> >;
@@ -1164,7 +1164,7 @@ int getpropcallback(void *s, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-string GameList::getSignature(int i) throw(DBError) {
+string GameList::getSignature(int i) {
   if (i < 0 || i >= (int)currentList->size()) {
     // printf("index out of range\n");
     return "";
@@ -1183,11 +1183,11 @@ string GameList::getSignature(int i) throw(DBError) {
   return prop_str;
 }
 
-string GameList::getSGF(int i) throw(DBError) {
+string GameList::getSGF(int i) {
   return getCurrentProperty(i, "sgf");
 }
 
-string GameList::getCurrentProperty(int i, string tag) throw(DBError) {
+string GameList::getCurrentProperty(int i, string tag) {
   if (i < 0 || i >= (int)currentList->size()) {
     // printf("index out of range\n");
     return "";
@@ -1206,7 +1206,7 @@ string GameList::getCurrentProperty(int i, string tag) throw(DBError) {
   return prop_str;
 }
 
-void GameList::search(Pattern& pattern, SearchOptions* so) throw(DBError) {
+void GameList::search(Pattern& pattern, SearchOptions* so) {
   if (mrs_pattern) delete mrs_pattern;
   mrs_pattern = new Pattern(pattern);
   if (searchOptions) delete searchOptions;
@@ -1295,7 +1295,7 @@ int rpl_callback(void *pl, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-void GameList::readPlayersList() throw(DBError) {
+void GameList::readPlayersList() {
   if (pl.size()) pl = vector<string>();
   sqlite3_exec(db, "select p from (select pw p from GAMES union select pb p from GAMES) order by lower(p)", rpl_callback, &pl, 0);
   // we ignore possible errors, since the table might not yet exist
@@ -1308,7 +1308,7 @@ int rnw_callback(void *num, int argc, char **argv, char **azColName) {
   return 0;
 }
 
-void GameList::readNumOfWins() throw(DBError) {
+void GameList::readNumOfWins() {
   int* pi = new int;
   sqlite3_exec(db, "select count(rowid) from GAMES where RE like 'B%'", rnw_callback, pi, 0);
   BwinsG = Bwins = BwinsAll = *pi;
@@ -1319,7 +1319,7 @@ void GameList::readNumOfWins() throw(DBError) {
 
 
 
-void GameList::createGamesDB() throw(DBError) {
+void GameList::createGamesDB() {
   SGFtags = p_op->SGFTagsAsStrings();
 
   string sql1 =          "create table if not exists GAMES ( ";
@@ -1386,7 +1386,7 @@ void GameList::createGamesDB() throw(DBError) {
   if (rc != SQLITE_OK) throw DBError();
 }
 
-void GameList::start_processing(int PROCESSVARIATIONS) throw(DBError) {
+void GameList::start_processing(int PROCESSVARIATIONS) {
   // printf("enter start_processing %p\n", p_op);
   // printf("dt %d sz %d\n", posDT, posSZ);
 
@@ -1405,7 +1405,7 @@ void GameList::start_processing(int PROCESSVARIATIONS) throw(DBError) {
   if (rc) { throw DBError(); }
 }
 
-void GameList::finalize_processing() throw(DBError) {
+void GameList::finalize_processing() {
   // printf("enter finalize_processing %d\n", db);
   for(unsigned int a=0; a<20; a++) if (algo_ps[a]) algo_ps[a]->finalize_process();
   int rc = sqlite3_exec(db, "commit;", 0, 0, 0);
@@ -1436,7 +1436,7 @@ void GameList::finalize_processing() throw(DBError) {
   delete SGFtags;
 }
 
-int GameList::process(const char* sgf, const char* path, const char* fn, std::vector<GameList* > glists, const char* DBTREE, int flags) throw(SGFError,DBError) {
+int GameList::process(const char* sgf, const char* path, const char* fn, std::vector<GameList* > glists, const char* DBTREE, int flags) {
   process_results_vector.clear();
   const char* dbtree = "";
   if (DBTREE) dbtree = DBTREE;
@@ -1943,7 +1943,7 @@ int GameList::process_results(unsigned int i) {
 }
 
 
-int GameList::snapshot() throw(DBError) {
+int GameList::snapshot() {
   // return a handle to a snapshot stored in the main GameList db
   // the snapshot contains copies of
   // - orderby, format1, format2
@@ -2006,7 +2006,7 @@ int GameList::snapshot() throw(DBError) {
   return sqlite3_last_insert_rowid(db);
 }
 
-void GameList::restore(int handle, bool del) throw(DBError) {
+void GameList::restore(int handle, bool del) {
   // restore the state of the GameList associated with handle
 
   // retrieve info associated with handle from db
@@ -2097,14 +2097,14 @@ void GameList::restore(int handle, bool del) throw(DBError) {
   }
 }
 
-void GameList::delete_snapshot(int handle) throw(DBError) {
+void GameList::delete_snapshot(int handle) {
   char sql[100];
   sprintf(sql, "delete from snapshots where rowid = %d", handle);
   int rc = sqlite3_exec(db, sql, 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
 }
 
-void GameList::delete_all_snapshots() throw(DBError) {
+void GameList::delete_all_snapshots() {
   int rc = sqlite3_exec(db, "drop table snapshots", 0, 0, 0);
   if (rc != SQLITE_OK) throw DBError();
   rc = sqlite3_exec(db, "create table if not exists snapshots ( data text );", 0, 0, 0);
@@ -2143,7 +2143,7 @@ void insert_if_new(vector<int>& d, int i1, int i2) {
 
 
 
-map<string, vector<int > >  find_duplicates(vector<string> glists, bool strict, bool dupl_within_db) throw(DBError) {
+map<string, vector<int > >  find_duplicates(vector<string> glists, bool strict, bool dupl_within_db) {
 
   // TODO Should we check that all glists have the same board size?
 

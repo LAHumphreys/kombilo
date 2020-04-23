@@ -587,7 +587,7 @@ Symmetries& Symmetries::operator=(const Symmetries& s) {
   return *this;
 }
 
-void Symmetries::set(char i, char j, char k, char l, char cs) throw(PatternError) {
+void Symmetries::set(char i, char j, char k, char l, char cs) {
   if (0 <= i && i < sizeX && 0 <= j && j < sizeY) {
     dataX[i + j*sizeX] = k;
     dataY[i + j*sizeX] = l;
@@ -596,25 +596,25 @@ void Symmetries::set(char i, char j, char k, char l, char cs) throw(PatternError
   else throw PatternError();
 }
 
-char Symmetries::getX(char i, char j) throw(PatternError) {
+char Symmetries::getX(char i, char j) {
   if (0 <= i && i < sizeX && 0 <= j && j < sizeY) return dataX[i + j*sizeX];
   else throw PatternError();
   return -1;
 }
 
-char Symmetries::getY(char i, char j) throw(PatternError) {
+char Symmetries::getY(char i, char j) {
   if (0 <= i && i < sizeX && 0 <= j && j < sizeY) return dataY[i + j*sizeX];
   else throw PatternError();
   return -1;
 }
 
-char Symmetries::getCS(char i, char j) throw(PatternError) {
+char Symmetries::getCS(char i, char j) {
   if (0 <= i && i < sizeX && 0 <= j && j < sizeY) return dataCS[i + j*sizeX];
   else throw PatternError();
   return -1;
 }
 
-char Symmetries::has_key(char i, char j) throw(PatternError) {
+char Symmetries::has_key(char i, char j) {
   if (0 <= i && i < sizeX && 0 <= j && j < sizeY) {
     if (dataX[i + j*sizeX] == -1) return 0;
     else return 1;
@@ -772,7 +772,7 @@ Pattern::Pattern(int type, int BOARDSIZE, int sX, int sY, const char* iPos, cons
   contList = CONTLIST;
 }
 
-Pattern::Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos) throw(PatternError) {
+Pattern::Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos) {
   // check whether anchor rectangle is valid
   if (le < 0 || ri+sX > BOARDSIZE || to < 0 || bo+sY > BOARDSIZE || ri < le || bo < to) throw PatternError();
 
@@ -798,7 +798,7 @@ Pattern::Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, 
 }
 
 Pattern::Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY,
-                 const char* iPos, const vector<MoveNC>& CONTLIST, const char* CONTLABELS) throw(PatternError) {
+                 const char* iPos, const vector<MoveNC>& CONTLIST, const char* CONTLABELS) {
   // check whether anchor rectangle is valid
   if (le < 0 || ri+sX > BOARDSIZE || to < 0 || bo+sY > BOARDSIZE || ri < le || bo < to) throw PatternError();
 
@@ -1024,7 +1024,7 @@ int Pattern::compose_flips(int i, int j) {
   return composition_table[j+8*i];
 }
 
-PatternList::PatternList(Pattern& p, int fColor, int nMove, GameList* gl) throw(PatternError) {
+PatternList::PatternList(Pattern& p, int fColor, int nMove, GameList* gl) {
   pattern.copy(p);
   fixedColor = fColor;
   nextMove = nMove;

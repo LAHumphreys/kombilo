@@ -81,7 +81,7 @@ void ExtendedMoveNumber::next() {
   data[length-1]++;
 }
 
-void ExtendedMoveNumber::down() throw(SGFError) {
+void ExtendedMoveNumber::down() {
   if (length==0) throw SGFError();
   else if (length==1) {
     int* newdata = new int[3];
@@ -126,7 +126,7 @@ char* SGFescape(const char* s) {
   return result;
 }
 
-vector<string>* parseRootNode(Node* n, vector<string>* tags) throw(SGFError) {
+vector<string>* parseRootNode(Node* n, vector<string>* tags) {
   vector<string>* results = new vector<string>(tags->size());
   string s = n->SGFstring;
   int lSGFstring = s.size();
@@ -233,7 +233,7 @@ PropValue::~PropValue() {
 }
 
 
-Node::Node(Node* prev, char* SGFst) throw(SGFError) {
+Node::Node(Node* prev, char* SGFst) {
   next = NULL;
   previous = prev;
   up = NULL;
@@ -252,7 +252,7 @@ Node::Node(Node* prev, char* SGFst) throw(SGFError) {
 Node::~Node() {
 }
 
-string remove_lowercase(string s) throw(SGFError) {
+string remove_lowercase(string s) {
   vector<char> ID;
   for(unsigned int i=0; i<s.size(); i++) {
     if (65 <= s[i] && s[i] <= 90) ID.push_back(s[i]);
@@ -299,7 +299,7 @@ ExtendedMoveNumber Node::get_move_number() {
 }
 
 
-void Node::parseNode() throw(SGFError) {
+void Node::parseNode() {
   // printf("Parse node, %s\n", SGFstring.c_str());
   if (!parsed) {
     string s = SGFstring;
@@ -394,14 +394,14 @@ void Node::parseNode() throw(SGFError) {
   }
 }    
 
-void Node::del_property_value(const string& IDcomplete) throw(SGFError) {
+void Node::del_property_value(const string& IDcomplete) {
   if (!parsed) parseNode();
   string ID = remove_lowercase(IDcomplete);
   data.erase(ID);
   SGFstring = nodeToString(data);
 }
 
-void Node::set_property_value(const string& IDcomplete, vector<string> propValue) throw(SGFError) {
+void Node::set_property_value(const string& IDcomplete, vector<string> propValue) {
   if (!parsed) parseNode();
   string ID = remove_lowercase(IDcomplete);
   data.erase(ID);
@@ -409,7 +409,7 @@ void Node::set_property_value(const string& IDcomplete, vector<string> propValue
   SGFstring = nodeToString(data);
 }
     
-void Node::add_property_value(const string& IDcomplete, vector<string> propValue) throw(SGFError) {
+void Node::add_property_value(const string& IDcomplete, vector<string> propValue) {
   if (!parsed) parseNode();
   string ID = remove_lowercase(IDcomplete);
   map<string, PropValue >::iterator it = data.find(ID);
@@ -429,7 +429,7 @@ vector<string> Node::keys() {
 
 int Node::sloppy = 1;
 
-Cursor::Cursor(const char* sgf, int sloppy) throw(SGFError) {
+Cursor::Cursor(const char* sgf, int sloppy) {
   Node::sloppy = sloppy;
 
   height = 0;
@@ -455,7 +455,7 @@ void Cursor::setFlags() {
   else atStart = 1;
 }
 
-void Cursor::parse(const char* s) throw(SGFError) {
+void Cursor::parse(const char* s) {
 
   Node* curr = root;        
   int p = -1;           // start of the currently parsed node
@@ -592,7 +592,7 @@ void Cursor::parse(const char* s) throw(SGFError) {
   }
 }
 
-void Cursor::game(int n) throw(SGFError) {
+void Cursor::game(int n) {
   if (n < root->numChildren) {
     posx = 0;
     posy = 0;
@@ -737,7 +737,7 @@ void Cursor::add(char* st) {
 }
 
 
-Node* Cursor::next(int n) throw(SGFError) {
+Node* Cursor::next(int n) {
 
   if (n >= currentN->numChildren) {
     throw SGFError();
@@ -752,7 +752,7 @@ Node* Cursor::next(int n) throw(SGFError) {
   return currentN;
 }
     
-Node* Cursor::previous() throw(SGFError) {
+Node* Cursor::previous() {
   if (currentN->previous) {
     while (currentN->up) {
       posy -= currentN->posyD;
@@ -766,7 +766,7 @@ Node* Cursor::previous() throw(SGFError) {
   return currentN;
 }
 
-Node* Cursor::getRootNode(int n) throw(SGFError) {
+Node* Cursor::getRootNode(int n) {
   if (!root) return 0;
 
   if (n >= root->numChildren) throw SGFError();
@@ -779,7 +779,7 @@ Node* Cursor::getRootNode(int n) throw(SGFError) {
 
 
  
-string nodeToString(map<string, PropValue >& data) throw(SGFError) {
+string nodeToString(map<string, PropValue >& data) {
   string result = ";";
   int l = 0;
   for(map<string, PropValue >::iterator kv = data.begin(); kv != data.end(); kv++) {

@@ -52,7 +52,7 @@ class ExtendedMoveNumber {
 
     ExtendedMoveNumber& operator=(const ExtendedMoveNumber& emn);
     void next();
-    void down() throw(SGFError);
+    void down();
     int total_move_num();
     // void down();
 };
@@ -82,17 +82,17 @@ class Node {
     int parsed;
     std::vector<std::string> gpv(const string& prop);
     std::vector<std::string>* get_property_value(const string& prop);
-    void set_property_value(const string& IDcomplete, vector<string> propValue) throw(SGFError);  ///< This sets propValue as new this->propValue (changed behavior in comparison with version 0.6!)
-    void add_property_value(const string& IDcomplete, vector<string> propValue) throw(SGFError);  ///< adds propValue to this->propValue (and "creates" it if necessary)
-    void del_property_value(const string& IDcomplete) throw(SGFError);  // delete data[ID]
+    void set_property_value(const string& IDcomplete, vector<string> propValue);  ///< This sets propValue as new this->propValue (changed behavior in comparison with version 0.6!)
+    void add_property_value(const string& IDcomplete, vector<string> propValue);  ///< adds propValue to this->propValue (and "creates" it if necessary)
+    void del_property_value(const string& IDcomplete);  // delete data[ID]
     vector<string> keys();
 
     int posyD; // used when displaying SGF structure graphically as a tree
 
-    Node(Node* prev, char* SGFst) throw(SGFError);
+    Node(Node* prev, char* SGFst);
     ~Node();
     ExtendedMoveNumber get_move_number();
-    void parseNode() throw(SGFError);
+    void parseNode();
     static int sloppy;
     int level;
   private:
@@ -103,11 +103,11 @@ class Node {
 
 typedef char* char_p;
 
-std::vector<std::string>* parseRootNode(Node* n, std::vector<std::string>* tags) throw(SGFError);
+std::vector<std::string>* parseRootNode(Node* n, std::vector<std::string>* tags);
 
 class Cursor {
   public:
-    Cursor(const char* sgf, int sloppy) throw(SGFError);
+    Cursor(const char* sgf, int sloppy);
     ~Cursor();
 
     int atStart;
@@ -119,11 +119,11 @@ class Cursor {
     int posx;
     int posy;
 
-    void parse(const char* s) throw(SGFError);
-    void game(int n) throw(SGFError); ///< Go to n-th game in this SGF file.
-    Node* next(int n=0) throw(SGFError); ///< Go to (n-th variation of) next move. Counting of variations starts at n=0.
-    Node* previous() throw(SGFError);
-    Node* getRootNode(int n) throw(SGFError);
+    void parse(const char* s);
+    void game(int n); ///< Go to n-th game in this SGF file.
+    Node* next(int n=0); ///< Go to (n-th variation of) next move. Counting of variations starts at n=0.
+    Node* previous();
+    Node* getRootNode(int n);
     char* outputVar(Node* node);
     char* output();
     void add(char* st);
@@ -136,7 +136,7 @@ class Cursor {
 
 };
 
-std::string nodeToString(std::map<std::string, PropValue >& data) throw(SGFError);
+std::string nodeToString(std::map<std::string, PropValue >& data);
 // char* rootNodeToString(PyObject* data);
 
 #endif

@@ -310,7 +310,7 @@ class GameList {
         ProcessOptions* p_options=0, ///<  p_options will be copied by GameList, so the caller has to free the pointer; <b>only used for newly built GameList</b>
         int BOARDSIZE=19, ///< The board size. Note that the board size is fixed for all games in the GameList. If you need different board sizes, you have to work with several instances of GameList.
         int cache=100 ///< Cache size for the sqlite3 database. Usually does not have a big impact.
-          ) throw(DBError);
+          );
     ~GameList();
 
 
@@ -346,7 +346,7 @@ class GameList {
      * \li a positive integer \c n: \c n games were processed. Use \c
      * process_results to access the individual results  
      */
-    int process(const char* sgf, const char* path, const char* fn, std::vector<GameList* > glists, const char* DBTREE = 0, int flags=0) throw(SGFError,DBError);
+    int process(const char* sgf, const char* path, const char* fn, std::vector<GameList* > glists, const char* DBTREE = 0, int flags=0);
 
     /*! For the processed games (0 <= i < n), use \c process_results(i). Its
      * return value is a combination of the following flags:
@@ -362,14 +362,14 @@ class GameList {
      */
     int process_results(unsigned int i=0); // result for i-th processed game in most recently processed SGF collection
 
-    void start_processing(int PROCESSVARIATIONS=-1) throw(DBError);
-    void finalize_processing() throw(DBError);
+    void start_processing(int PROCESSVARIATIONS=-1);
+    void finalize_processing();
     /**@}*/ 
 
 
     /// \name Pattern search
     /**@{*/ 
-    void search(Pattern& pattern, SearchOptions* options = 0) throw(DBError);
+    void search(Pattern& pattern, SearchOptions* options = 0);
     char lookupLabel(char x, char y);
     void setLabel(char x, char y, char label);
     Continuation lookupContinuation(char x, char y);
@@ -378,20 +378,20 @@ class GameList {
 
     /// \name Signature search
     /**@{*/ 
-    void sigsearch(char* sig) throw(DBError);
-    vector<int> sigsearchNC(char* sig) throw(DBError); // sig search in all; do not change currentList
-    std::string getSignature(int i) throw(DBError);
+    void sigsearch(char* sig);
+    vector<int> sigsearchNC(char* sig); // sig search in all; do not change currentList
+    std::string getSignature(int i);
     /**@}*/ 
 
     /// \name game info search
     /**@{*/
-    void gisearch(const char* sql, int complete=0) throw(DBError);
+    void gisearch(const char* sql, int complete=0);
     ///< Search for given sql query. The string sql is inserted into the following query:
     ///< select id from GAMES where %s " order by id;" % sql
     ///< (putting the gamelist in the right order is dealt with separately)
     ///< If complete==1, then sql is passed as an sql query without any changes (i.e. you must put in the "select ..." stuff in yourself).
     
-    vector<int>* gisearchNC(const char* sql, int complete=0) throw(DBError);
+    vector<int>* gisearchNC(const char* sql, int complete=0);
     ///< Execute the given sql query (inserted in select id from GAMES where %s " order by id;" % sql
     ///< without changing the GameList.
     ///< Returns a vector of int's containing all indices (in currentList) of games that match the query.
@@ -409,7 +409,7 @@ class GameList {
      * way for assigning such tags. 
      */
     /**@{*/
-    void tagsearch(int tag) throw(DBError); ///< Search for all games tagged with the given tag.
+    void tagsearch(int tag); ///< Search for all games tagged with the given tag.
 
     /*! The \c tagsearchSQL method allows specifying SQL which will simply be inserted
      * into the following \c SELECT statement:
@@ -418,14 +418,14 @@ class GameList {
      * <tt>exists(select * from game_tags where game_id=games.id and tag_id=%(t)s)</tt>
      * with one or more \c tag_id's.
      */
-    void tagsearchSQL(char* query) throw(DBError);
-    void setTag(int tag, int start=0, int end=0) throw(DBError);
+    void tagsearchSQL(char* query);
+    void setTag(int tag, int start=0, int end=0);
     ///< Tag all games in range <tt>start <= i < end</tt>. (Details below.)
 
     ///< Setting \c end to \c 0 means: tag only the game with index \c start.
     ///< \c start and \c end refer to indices in currentList, i.e. in the list of games "currently in view".
 
-    void setTagID(int tag, int i) throw(DBError); ///< Tag the game with \c ID equal to \c i with tag \c tag.
+    void setTagID(int tag, int i); ///< Tag the game with \c ID equal to \c i with tag \c tag.
 
     /*! If \c tag is 0, return \c vector with all tags attached to game \c i.
      * If tag is not 0, return vector with single element \c tag, or empty
@@ -433,9 +433,9 @@ class GameList {
      *
      * Here \c i refers to the row ID of the game in the sqlite database.
      */
-    vector<int> getTagsID(int i, int tag=0) throw(DBError);
+    vector<int> getTagsID(int i, int tag=0);
 
-    void deleteTag(int tag, int i = -1) throw(DBError); ///< Remove \c tag from game with \c ID \c i, or from all games in the list (if \c i is -1, the default!).
+    void deleteTag(int tag, int i = -1); ///< Remove \c tag from game with \c ID \c i, or from all games in the list (if \c i is -1, the default!).
 
 
     /*! If \c tag is 0, return \c vector with all tags attached to \c i-th game
@@ -446,7 +446,7 @@ class GameList {
      * Here \c i refers to the index of the game in the list of games
      * "currently in the game list".
      */
-    std::vector<int> getTags(unsigned int i, int tag=0) throw(DBError); // note the order of arguments!
+    std::vector<int> getTags(unsigned int i, int tag=0); // note the order of arguments!
     /**@}*/
 
 
@@ -456,10 +456,10 @@ class GameList {
 
     /// \name snapshot, restore
     /**@{*/
-    int snapshot() throw(DBError);
-    void restore(int handle, bool del=false) throw(DBError);
-    void delete_snapshot(int handle) throw(DBError);
-    void delete_all_snapshots() throw(DBError);
+    int snapshot();
+    void restore(int handle, bool del=false);
+    void delete_snapshot(int handle);
+    void delete_all_snapshots();
     /**@}*/
 
     // ------- misc ---------------------------------------------------------------
@@ -478,8 +478,8 @@ class GameList {
     pair<int, int> get_currentList_entry(unsigned int i);
     std::string currentEntryAsString(int i);
     std::vector<std::string> currentEntriesAsStrings(int start=0, int end=0);
-    std::string getSGF(int i) throw(DBError);
-    std::string getCurrentProperty(int i, std::string tag) throw (DBError);
+    std::string getSGF(int i);
+    std::string getCurrentProperty(int i, std::string tag);
     /**@}*/
 
 
@@ -499,9 +499,9 @@ class GameList {
     friend int gis_callbackNC(void *pair_gl_CL, int argc, char **argv, char **azColName);
 
   private:
-    void createGamesDB() throw(DBError);
-    void open_db() throw(DBError);
-    void readDB() throw(DBError);
+    void createGamesDB();
+    void open_db();
+    void readDB();
     void addAlgos(bool NEW);
     int db_cache_size;
     int posDT; // used when parsing the DT, SZ, BR, WR, HA fields during processing
@@ -514,7 +514,7 @@ class GameList {
     std::vector<std::string>* SGFtags;
     std::string sql_ins_rnp; // sql string to insert root node properties
     std::vector<std::string> pl; // list of all players
-    void readPlayersList() throw(DBError);
+    void readPlayersList();
     std::vector<std::vector<int> >* duplicates;
     std::vector<int> process_results_vector;
 
@@ -542,7 +542,7 @@ class GameList {
     ///< This is used in search methods as gisearchNC which do not change the currentList
     
     void setCurrentFromIndex(int index);
-    void readNumOfWins() throw(DBError);
+    void readNumOfWins();
 };
 
 // ------- duplicates ---------------------------------------------------------
@@ -558,7 +558,7 @@ class GameList {
  * here db_id is the place within the glists vector which was passed to
  * find_duplicates, and game_id is the id within the gamelist db_id.
  */
-std::map<std::string, std::vector<int> >  find_duplicates(std::vector<string> glists, bool strict=false, bool dupl_within_db=false) throw(DBError);
+std::map<std::string, std::vector<int> >  find_duplicates(std::vector<string> glists, bool strict=false, bool dupl_within_db=false);
 
 
 

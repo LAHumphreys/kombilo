@@ -132,11 +132,11 @@ class Symmetries {
     ~Symmetries();
     Symmetries(const Symmetries& s);
     Symmetries& operator=(const Symmetries& s);
-    void set(char i, char j, char k, char l, char cs) throw(PatternError);
-    char getX(char i, char j) throw(PatternError);
-    char getY(char i, char j) throw(PatternError);
-    char getCS(char i, char j) throw(PatternError);
-    char has_key(char i, char j) throw(PatternError);
+    void set(char i, char j, char k, char l, char cs);
+    char getX(char i, char j);
+    char getY(char i, char j);
+    char getCS(char i, char j);
+    char has_key(char i, char j);
 };
 
 /*! A pattern, say 
@@ -213,8 +213,8 @@ class Pattern {
     // Note: the char*'s iPos and CONTLABELS will NOT be free'ed by the Pattern class.
 
     Pattern();
-    Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos, const std::vector<MoveNC>& CONTLIST, const char* CONTLABELS = 0) throw(PatternError);
-    Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos) throw(PatternError);
+    Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos, const std::vector<MoveNC>& CONTLIST, const char* CONTLABELS = 0);
+    Pattern(int le, int ri, int to, int bo, int BOARDSIZE, int sX, int sY, const char* iPos);
     Pattern(int type, int BOARDSIZE, int sX, int sY, const char* iPos, const std::vector<MoveNC>& CONTLIST, const char* CONTLABELS = 0);
     Pattern(int type, int BOARDSIZE, int sX, int sY, const char* iPos, const char* CONTLABELS = 0);
     Pattern(const Pattern& p);
@@ -301,7 +301,7 @@ class PatternList {
     int* flipTable;
     int special; ///< == -1, unless there exists a symmetry which yields the color-switched pattern
 
-    PatternList(Pattern& p, int fColor, int nMove, GameList* gl) throw (PatternError);
+    PatternList(Pattern& p, int fColor, int nMove, GameList* gl);
     ~PatternList();
 
     void patternList();

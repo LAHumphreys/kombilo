@@ -79,13 +79,13 @@ class abstractBoard {
     int boardsize;
     std::vector<Move> undostack;
 
-    abstractBoard(int bs = 19) throw(BoardError);
+    abstractBoard(int bs = 19);
     abstractBoard(const abstractBoard& ab);
     ~abstractBoard();
     abstractBoard& operator=(const abstractBoard& ab);
 
     void clear(); ///< Clear the board and the undostack
-    int play(int x, int y, const char* color) throw(BoardError);
+    int play(int x, int y, const char* color);
     ///< play a move of specified color (a string starting with \c b, \c B, \c w or \c W) at given position (x, y between 0 and boardsize-1)
     void undo(int n=1); ///< undo \c n moves
     void remove(int x, int y, bool removeFromUndostack);
@@ -96,7 +96,7 @@ class abstractBoard {
     /// The undostack contains information about all moves played (and in particular the captures
     /// made with each of those moves.
     /**@{*/
-    int len_cap_last() throw(BoardError);
+    int len_cap_last();
     void undostack_append_pass();
     p_cc undostack_top_pos();
     char undostack_top_color();
